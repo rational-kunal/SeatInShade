@@ -21,8 +21,9 @@ struct ContentView: View {
                     .background(Color.clear)
                     .scrollContentBackground(.hidden)
                     .scrollDisabled(true)
-                    .opacity(0.625)
+                    .opacity(0.7)
                 }
+                .padding(.top, -30)
             }
         }
     }
