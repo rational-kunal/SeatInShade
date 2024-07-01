@@ -7,10 +7,6 @@ struct MapLocation {
     var mapItem: MKMapItem?
 }
 
-enum Direction {
-case Left, Right, None
-}
-
 @Observable
 class MapState {
     @ObservationIgnored let service = MapService()
@@ -168,7 +164,6 @@ private func calculateSunPosition(forCoordinates coordinate: CLLocationCoordinat
 }
 
 func calculateBearing(from coordinate1: CLLocationCoordinate2D, to coordinate2: CLLocationCoordinate2D) -> Double {
-    // Convert latitude and longitude from degrees to radians
     let lat1 = coordinate1.latitude * .pi / 180.0
     let lon1 = coordinate1.longitude * .pi / 180.0
     let lat2 = coordinate2.latitude * .pi / 180.0
@@ -188,14 +183,4 @@ func calculateBearing(from coordinate1: CLLocationCoordinate2D, to coordinate2: 
     bearing = (bearing + 360).truncatingRemainder(dividingBy: 360)
 
     return bearing
-}
-
-func directionOfSun(yourBearing: Double, sunBearing: Double) -> Direction {
-    let deltaTheta = (sunBearing - yourBearing + 360).truncatingRemainder(dividingBy: 360)
-
-    if deltaTheta >= 0 && deltaTheta < 180 {
-        return .Right
-    } else {
-        return .Left
-    }
 }

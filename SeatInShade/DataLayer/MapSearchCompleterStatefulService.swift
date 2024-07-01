@@ -1,13 +1,6 @@
-//
-//  MapSearchCompleterStatefulService.swift
-//  ShadeSeat
-//
-//  Created by Kunal Kamble on 22/06/24.
-//
-
 import MapKit
 
-@Observable class MapSearchCompleterStatefulService: NSObject, MKLocalSearchCompleterDelegate {
+@Observable class MapSearchCompleterStatefulService: NSObject {
     var searchResults: [MKLocalSearchCompletion] = []
 
     @ObservationIgnored
@@ -20,7 +13,9 @@ import MapKit
     func update(query: String) {
         localSearchCompleter.queryFragment = query
     }
+}
 
+extension MapSearchCompleterStatefulService: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         searchResults = completer.results
     }

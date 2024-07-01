@@ -14,67 +14,13 @@ class MapService {
         }
     }
 
-    func route(fromMapItem: MKMapItem, toMapItem: MKMapItem, completionRoute: @escaping (MKRoute?) -> Void, completionETA: @escaping (TimeInterval?) -> Void) {
-        let request = MKDirections.Request()
-        request.source = fromMapItem
-        request.destination = toMapItem
-
-        let directions = MKDirections(request: request)
-        directions.calculate { response, error in
-            if let error {
-                print("Error occurred in route search: \(error.localizedDescription)")
-                completionRoute(nil)
-            } else {
-                completionRoute(response?.routes.first)
-            }
-        }
-        directions.calculateETA { response, error in
-            if let error {
-                print("Error occurred in route ETA search: \(error.localizedDescription)")
-                completionETA(nil)
-            } else {
-                completionETA(response?.expectedTravelTime)
-            }
-        }
-    }
-
-    func route(fromMapItem: MKMapItem, toMapItem: MKMapItem, completion: @escaping (MKRoute, TimeInterval) -> Void) {
-        let request = MKDirections.Request()
-        request.source = fromMapItem
-        request.destination = toMapItem
-
-        var route: MKRoute?
-        var expectedTime: TimeInterval?
-        let directions = MKDirections(request: request)
-        directions.calculate { response, error in
-            if let error {
-                print("Error occurred in route search: \(error.localizedDescription)")
-            }
-            route = response?.routes.first
-
-            if let route, let expectedTime {
-                completion(route, expectedTime)
-            }
-        }
-        directions.calculateETA { response, error in
-            if let error {
-                print("Error occurred in route ETA search: \(error.localizedDescription)")
-            }
-            expectedTime = response?.expectedTravelTime
-
-            if let route, let expectedTime {
-                completion(route, expectedTime)
-            }
-        }
-    }
-
     func route(fromMapItem: MKMapItem, toMapItem: MKMapItem) async throws -> (MKRoute, TimeInterval) {
         let request = MKDirections.Request()
         request.source = fromMapItem
         request.destination = toMapItem
 
         let directions = MKDirections(request: request)
-        
+
         @Sendable func calculateRoute() async throws -> MKRoute {
             return try await withCheckedThrowingContinuation { continuation in
                 directions.calculate { response, error in
@@ -102,11 +48,10 @@ class MapService {
                 }
             }
         }
-        
+
         let route = try await calculateRoute()
         let expectedTime = try await calculateETA()
-        
+
         return (route, expectedTime)
     }
-
 }

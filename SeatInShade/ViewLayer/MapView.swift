@@ -22,9 +22,9 @@ struct MapView: View {
                let selfCoordinate = mapState.fromMapItem?.placemark.coordinate
             {
                 Annotation("", coordinate: selfCoordinate) {
-                    Image(systemName: "arrow.up")
-                        .font(.title)
-                        .foregroundColor(.black)
+                    Arrow()
+                        .stroke(Color.black, lineWidth: 2)
+                        .frame(width: 10, height: 80)
                         .rotationEffect(Angle(degrees: selfBearingDirection))
                 }
             }
@@ -33,7 +33,7 @@ struct MapView: View {
                     Annotation("", coordinate: coordinate) {
                         Arrow()
                             .stroke(Color.orange, lineWidth: 2)
-                            .frame(width: 10, height: 10 + 40 * CGFloat(cos(sunPosition.altitude.inRadians.value))) // TODO: Remove
+                            .frame(width: 10, height: 10 + 40 * CGFloat(cos(sunPosition.altitude.inRadians.value)))
                             .rotationEffect(Angle(degrees: sunPosition.northBasedAzimuth.value))
                     }
                 }
